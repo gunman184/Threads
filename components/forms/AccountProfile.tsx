@@ -24,9 +24,13 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { Textarea } from "../ui/textarea";
-
+import { getRandomValues } from "node:crypto";
+import { isBase64Image } from "@/lib/utils";
+import { useUploadThing } from "@/lib/uploadthing";
+import { updateUser } from "@/lib/actions/user.actions";
+import { usePathname, useRouter } from "next/navigation";
 interface Props {
   user: {
     id: string;
@@ -40,6 +44,11 @@ interface Props {
 }
 
 const AccountProfile = ({ user, btnTitle}: Props) => {
+
+  const [files, setFiles] = useState<File[]>([])
+  const {startUpload} = useUploadThing("media")
+  const router = useRouter();
+  const pathname = usePathname();
   const form = useForm({
     resolver: zodResolver(UserValidation),
     defaultValues: {
@@ -62,6 +71,7 @@ const AccountProfile = ({ user, btnTitle}: Props) => {
       const file = e.target.files[0];
 
       if (!file.type.includes("image")) return;
+       setFiles([file]);
 
       fileReader.onload = async (event) => {
         const imageDataUrl = event.target?.result?.toString() || "";
@@ -72,21 +82,34 @@ const AccountProfile = ({ user, btnTitle}: Props) => {
     }
   };
 
-  function onSubmit(data: z.infer<typeof UserValidation>) {
-    toast("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-      position: "bottom-right",
-      classNames: {
-        content: "flex flex-col gap-2",
-      },
-      style: {
-        "--border-radius": "calc(var(--radius) + 4px)",
-      } as React.CSSProperties,
+  const onSubmit = async (data: z.infer<typeof UserValidation>) => {
+    const blob = data.profile_photo
+    
+
+    const hasImageChanged = isBase64Image(blob)
+
+    if(hasImageChanged) {
+
+      const imgRes = await startUpload(files)
+      if(imgRes && imgRes.length>0){
+        data.profile_photo = imgRes[0].url;
+      }
+    }
+    await updateUser({
+      userId: user.id,
+      username: data.username,
+      name: data.name,
+      bio: data.bio,
+      image: data.profile_photo,
+      path: pathname
     });
+    if(pathname === '/profile/edit'){
+      router.back()
+
+    }else{
+      router.push('/')
+    }
+
   }
 
   return (
