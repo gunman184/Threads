@@ -5,6 +5,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/webhook/clerk",
   "/sign-up(.*)", // note the (.*) at the end
   "/sign-in(.*)",
+  "/api/uploadthing",
 ]);
 
 const isIgnoredRoute = createRouteMatcher(["/api/webhook/clerk"]);

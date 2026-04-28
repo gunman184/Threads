@@ -27,6 +27,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "placehold.co",
       },
+      {
+      protocol: "https",
+      hostname: "utfs.io",   // ✅ ADD THIS
+    },
+    {
+      protocol: "https",
+      hostname: "*.ufs.sh",  // ✅ ADD THIS (important fallback)
+    },
     ],
   },
 };

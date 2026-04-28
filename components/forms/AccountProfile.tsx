@@ -83,32 +83,34 @@ const AccountProfile = ({ user, btnTitle}: Props) => {
   };
 
   const onSubmit = async (data: z.infer<typeof UserValidation>) => {
-    const blob = data.profile_photo
-    
+    let imageUrl = data.profile_photo;
 
-    const hasImageChanged = isBase64Image(blob)
+    // Only upload if it's a new image (base64 preview)
+    if (imageUrl.startsWith("data:")) {
+      const imgRes = await startUpload(files);
 
-    if(hasImageChanged) {
+      if (!imgRes || imgRes.length === 0) return;
 
-      const imgRes = await startUpload(files)
-      if(imgRes && imgRes.length>0){
-        data.profile_photo = imgRes[0].url;
-      }
+      imageUrl = imgRes[0].url; // ✅ ONLY STORE URL
     }
     await updateUser({
       userId: user.id,
       username: data.username,
       name: data.name,
       bio: data.bio,
-      image: data.profile_photo,
-      path: pathname
+      image: imageUrl,
+      path: pathname,
     });
-    if(pathname === '/profile/edit'){
+        router.push(pathname === "/profile/edit" ? "/profile" : "/");
+    router.refresh();
+
+    /*if(pathname === '/profile/edit'){
       router.back()
 
     }else{
       router.push('/')
-    }
+
+    }*/
 
   }
 
