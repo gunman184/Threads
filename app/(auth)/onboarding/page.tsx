@@ -1,10 +1,12 @@
 import AccountProfile from "@/components/forms/AccountProfile";
 import { currentUser } from "@clerk/nextjs/server";
-
+import { getUserById } from "@/lib/actions/user.actions";
 async function Page() {
   const user = await currentUser();
+  let mongoUser = null;
   if (!user) return null;
 
+  mongoUser = await getUserById(user.id)
   const userInfo: any = {};
   const userData = {
     id: user.id,
@@ -12,7 +14,8 @@ async function Page() {
     username: userInfo?.username || user.username,
     name: userInfo?.name || user.firstName || "",
     bio: userInfo?.bio || "",
-    image: userInfo?.image || user.imageUrl || "",
+    /*image: userInfo?.image || user.imageUrl || "",*/
+    image: mongoUser?.image || user.imageUrl || "",
   };
 
   return (
