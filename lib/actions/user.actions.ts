@@ -13,6 +13,19 @@ interface Params {
   path: string;
 }
 
+export async function fetchUser(userId: string) {
+  try {
+    await connectToDB();
+    return await User.findOne({ id: userId });
+    // .populate({
+    //   path: 'communities',
+    //   model: Community
+    // })
+  } catch (error: any) {
+    throw new Error(`Failed to fetch user: ${error.message}`);
+  }
+}
+
 export async function updateUser({
   userId,
   username,
@@ -35,8 +48,8 @@ export async function updateUser({
       },
       {
         upsert: true,
-        new: true, // ✅ FIX 2
-      }
+        new: true, // ✅ FIX 2w
+      },
     );
 
     // ✅ FIX 3: refresh all relevant pages

@@ -177,6 +177,7 @@ const AccountProfile = ({ user, btnTitle}: Props) => {
                   <div className="grid grid-cols-[80px_1fr] items-center gap-2 mt-2">
                     <FieldLabel className="">Name</FieldLabel>
 
+
                     <Input
                       className="flex-1"
                       {...field}

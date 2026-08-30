@@ -9,7 +9,7 @@ export default function Home() {
 
     <div>
       <UserButton/>
-      <h2>Hello Man! :D</h2>
+      <h2>Hello Man! :D h</h2>
     </div>
   );
 }
