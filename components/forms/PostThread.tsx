@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormItem, FormLabel } from "@/components/ui/form";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserValidation } from "@/lib/validations/user";
@@ -44,38 +44,57 @@ interface Props {
   btnTitle: string;
 }
 
-
-
-
-function PostThread({userId}: {userId: string}){
-
+function PostThread({ userId }: { userId: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const form = useForm({
     resolver: zodResolver(ThreadValidation),
     defaultValues: {
-      thread: '',
+      thread: "",
       accountId: userId,
     },
   });
 
+  const onSubmit = async () => {
 
-    
-    return (
+    //await createThread()
+  };
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="mt-12 flex flex-col justify-start gap-10"
+      >
+        <FieldGroup>
+          <Controller
+            name="thread"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel className="text-base-semibold text-light-2">Content</FieldLabel>
 
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col justify-start gap-10">
-            </form>
+                  <Textarea
+                    className="flex-1 no-focus border border-dark-4 bg-dark-3 text-light-1"
+                    {...field}
+                    rows={15}
+                    aria-invalid={fieldState.invalid}
+                    autoComplete="off"
+                  />
+        
 
-
-            
-        </Form>
-    )
-
-
-
-
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+        </FieldGroup>
+        <Button type="submit" className="bg-primary-500">
+            Post Tread
+           </Button>
+      </form>
+    </Form>
+  );
 }
 
 export default PostThread;
