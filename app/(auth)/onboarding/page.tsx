@@ -22,7 +22,7 @@ async function Page() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-black px-10 py-20">
       <h1 className="head-text mb-2">Onboarding</h1>
       <p className="text-base-regular text-light-2 mb-8 text-center max-w-md">
-        Complete your profiles now to use Threads!
+        Complete your profiles now to use Threads! 
       </p>
 
       <section className="bg-dark-2 p-10 rounded-md">
