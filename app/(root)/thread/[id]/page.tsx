@@ -44,10 +44,31 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
       <div className="mt-7">
         <Comment
-          threadId={thread.id}
+          threadId={thread._id.toString()}
           currentUserImg={mongoUser?.image || "/assets/profile.svg"}
-          currentUserId={mongoUser?.id}
+          currentUserId={mongoUser?._id.toString()}
         />
+      </div>
+
+      <div className="mt-10">
+        {thread.children.map((childrenItem: any) => (
+        
+           <ThreadCard
+          key={childrenItem._id.toString()}
+          id={childrenItem._id.toString()}
+          currentUserId={childrenItem._id.toString()}
+          parentId={childrenItem.parentId?.toString()}
+          content={childrenItem.text}
+          author={childrenItem.author}
+          community={childrenItem.community}
+          createdAt={childrenItem.createdAt}
+          comments={childrenItem.children}
+          likesCount={childrenItem.likesCount}
+          likedByCurrentUser={likedThreadsIds.has(childrenItem._id.toString())}
+        />
+
+
+        ))}
       </div>
     </section>
   );

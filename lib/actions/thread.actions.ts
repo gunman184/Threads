@@ -169,7 +169,14 @@ export async function addCommentToThread(threadId: string, commentText:string, u
       text: commentText,
       author: userId,
       parentId: threadId
-    })
+    });
+
+    const savedCommentThread = await commentThread.save()
+
+    originalThread.children.push(savedCommentThread._id)
+    
+    await originalThread.save();
+    revalidatePath(path);
 
     
   }catch(error: any){
