@@ -34,15 +34,18 @@ function LeftSidebar() {
       <div className="mt-10 px-6">
         <SignedIn>
           <SignOutButton redirectUrl="/sign-in">
-            <div className="flex cursor-pointer gap-4 p-4">
+            <button
+              type="button"
+              className="flex w-full cursor-pointer gap-4 p-4"
+            >
               <Image
                 src="/assets/logout.svg"
                 alt="logout"
                 width={24}
                 height={24}
-              ></Image>
-              <p className="text-light-2 max-lg-hidden">Logout </p>
-            </div>
+              />
+              <p className="text-light-2 max-lg-hidden">Logout</p>
+            </button>
           </SignOutButton>
         </SignedIn>
       </div>
